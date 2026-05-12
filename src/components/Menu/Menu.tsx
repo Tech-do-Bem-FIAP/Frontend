@@ -1,3 +1,4 @@
+import type React from "react";
 import type { ReactElement } from "react";
 
 type MenuVariant = "default" | "footer";
@@ -19,11 +20,17 @@ interface MenuItemProps {
   icon?: ReactElement;
 }
 
-export const Menu = ({ children, variant = "default" }: MenuProps): JSX.Element => {
+export const Menu = ({
+  children,
+  variant = "default",
+}: MenuProps): React.JSX.Element => {
   return <ul className={variants[variant]}>{children}</ul>;
 };
 
-export const MenuItem = ({ children, icon }: MenuItemProps): JSX.Element => {
+export const MenuItem = ({
+  children,
+  icon,
+}: MenuItemProps): React.JSX.Element => {
   return (
     <li className="flex gap-1 items-center max-w-fit">
       {icon}

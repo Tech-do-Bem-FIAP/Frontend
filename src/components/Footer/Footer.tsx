@@ -2,8 +2,9 @@ import { House, Info, Phone, Search, UsersRound } from "lucide-react";
 import { Logo } from "../Logo/Logo";
 import { Menu, MenuItem } from "../Menu/Menu";
 import { Link } from "react-router";
+import type React from "react";
 
-export const Footer = (): JSX.Element => {
+export const Footer = (): React.JSX.Element => {
   const currentYear = new Date().getFullYear();
 
   return (

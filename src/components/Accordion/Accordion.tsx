@@ -1,9 +1,14 @@
+import type React from "react";
+
 interface AccordionProps {
   question: string;
   answer: string;
 }
 
-export const Accordion = ({ question, answer }: AccordionProps): JSX.Element => {
+export const Accordion = ({
+  question,
+  answer,
+}: AccordionProps): React.JSX.Element => {
   return (
     <details
       name="FAQ"
@@ -11,7 +16,9 @@ export const Accordion = ({ question, answer }: AccordionProps): JSX.Element => 
     >
       <summary className="text-lg font-medium text-(--brand-secondary) list-none flex justify-between items-center">
         <span>{question}</span>
-        <span className="text-(--brand-primary) ml-4 shrink-0 transition-transform duration-200 [[open]_&]:rotate-180">▾</span>
+        <span className="text-(--brand-primary) ml-4 shrink-0 transition-transform duration-200 [[open]_&]:rotate-180">
+          ▾
+        </span>
       </summary>
       <p className="text-(--text-color) pt-4 leading-relaxed">{answer}</p>
     </details>

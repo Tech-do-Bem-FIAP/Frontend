@@ -10,9 +10,9 @@ import {
 import { Logo } from "../Logo/Logo";
 import { Menu, MenuItem } from "../Menu/Menu";
 import { Link } from "react-router";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-export const Header = (): JSX.Element => {
+export const Header = (): React.JSX.Element => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -83,7 +83,10 @@ export const Header = (): JSX.Element => {
       </div>
 
       {isOpen && (
-        <div id="mobile-menu" className="lg:hidden container_page pb-4 border-t border-white/20">
+        <div
+          id="mobile-menu"
+          className="lg:hidden container_page pb-4 border-t border-white/20"
+        >
           <Menu variant="default">
             <MenuItem icon={<House className="w-4 h-4" />}>
               <Link to="/" onClick={() => setIsOpen(false)}>

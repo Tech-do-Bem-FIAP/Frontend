@@ -1,3 +1,5 @@
+import type React from "react";
+
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
@@ -19,7 +21,7 @@ export const Input = ({
   noLabel = false,
   onChange,
   ...props
-}: InputProps): JSX.Element => {
+}: InputProps): React.JSX.Element => {
   return (
     <div className={`${fullWidth ? "w-full" : "min-w-3xs"}`}>
       {!noLabel && (
