@@ -7,7 +7,7 @@ const variants: Record<MenuVariant, string> = {
   default:
     "flex flex-col text-(--brand-tertiary) p-4 gap-y-6 lg:flex-row lg:gap-20",
   footer:
-    "grid grid-flow-col grid-rows-3 my-4 gap-10 w-fit mx-auto text-(--brand-tertiary) lg:flex lg:items-center lg:gap-x-10 lg:m-0",
+    "grid grid-flow-col grid-rows-3 my-4 gap-10 w-fit mx-auto text-(--brand-tertiary) lg:flex lg:h-full  lg:gap-x-10 lg:m-0",
 };
 
 interface MenuProps {
