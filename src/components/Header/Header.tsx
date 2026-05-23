@@ -26,7 +26,9 @@ export const Header = (): React.JSX.Element => {
   return (
     <header className="bg-linear-to-b from-black to-(--brand-primary) text-white sticky top-0 z-10 shadow-lg">
       <div className="container_page flex justify-between items-center py-3">
-        <Logo variant="default" />
+        <Link to="/" aria-label="Ir para a página inicial">
+          <Logo variant="default" />
+        </Link>
 
         <button
           onClick={() => setIsOpen(!isOpen)}

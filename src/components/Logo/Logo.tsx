@@ -1,4 +1,3 @@
-import { Link } from "react-router";
 import logo from "../../assets/logo-tech-do-bem.webp";
 
 type LogoVariant = "default" | "secondary";
@@ -14,14 +13,10 @@ interface LogoProps {
 
 export const Logo = ({ variant = "default" }: LogoProps) => {
   return (
-    <a>
-      <Link to="/">
-        <img
-          className={`${variants[variant]}`}
-          src={logo}
-          alt="Logo da plataforma ech do em composta por um dente cenográfico e a tipografia da logo."
-        />
-      </Link>
-    </a>
+    <img
+      className={variants[variant]}
+      src={logo}
+      alt="Logo da plataforma Tech do Bem composta por um dente cenográfico e a tipografia da logo."
+    />
   );
 };

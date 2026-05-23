@@ -9,8 +9,10 @@ export function DashboardHeader() {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
+
+  const isAdmin = user?.cargo === "Administrador";
 
   return (
     <header className="bg-linear-to-b from-(--brand-secondary) to-(--brand-primary) text-white shadow-lg sticky top-0 z-10">
@@ -19,7 +21,20 @@ export function DashboardHeader() {
           <img src={logo} alt="Tech do Bem" className="h-10 w-auto" />
           <div>
             <p className="font-semibold leading-tight">Tech do Bem</p>
-            <p className="text-xs opacity-80">{user?.nome}</p>
+            <div className="flex items-center gap-2 text-xs opacity-80">
+              <span>{user?.nome}</span>
+              {user?.cargo && (
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                    isAdmin
+                      ? "bg-amber-300 text-amber-900"
+                      : "bg-white/20 text-white"
+                  }`}
+                >
+                  {user.cargo}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
