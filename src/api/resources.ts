@@ -7,11 +7,27 @@ export interface LoginResponseDTO { role: string; id: number; nome: string; carg
 export interface PacienteDTO {
   idPaciente: number; nome: string; cpf: string | null;
   dataNasc: string; telefone: string; email: string; idDentista: number;
+  /** Campos de endereço/geolocalização — opcionais (backend pode retornar null). */
+  cep?: string | null;
+  logradouro?: string | null;
+  bairro?: string | null;
+  cidade?: string | null;
+  uf?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface PacienteRequestDTO {
   nome: string; cpf: string | null;
   dataNasc: string; telefone: string; email: string; idDentista: number;
+  /** Campos opcionais de endereço/geolocalização — enviar apenas quando preenchidos. */
+  cep?: string | null;
+  logradouro?: string | null;
+  bairro?: string | null;
+  cidade?: string | null;
+  uf?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface DentistaDTO {

@@ -42,6 +42,53 @@ export interface Paciente {
   telefone: string;
   email: string;
   id_dentista: number;
+  /** Campos de endereço/geolocalização — opcionais (null pra pacientes sem geocoding). */
+  cep?: string | null;
+  logradouro?: string | null;
+  bairro?: string | null;
+  cidade?: string | null;
+  uf?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+}
+
+/**
+ * Intersection Type — Paciente que já possui coordenadas e endereço resolvidos.
+ * Usado em telas que exigem geolocalização garantida (ex: mapa, página de área).
+ */
+export type PacienteGeolocalizado = Paciente & {
+  coords: { lat: number; lng: number };
+  endereco: { cep: string; bairro: string; cidade: string; uf: string };
+};
+
+/** Type guard — verifica se o paciente possui coordenadas + endereço completos. */
+export function temGeolocalizacao(p: Paciente): boolean {
+  return (
+    p.latitude != null &&
+    p.longitude != null &&
+    p.bairro != null &&
+    p.cep != null &&
+    p.cidade != null &&
+    p.uf != null
+  );
+}
+
+/**
+ * Constrói um PacienteGeolocalizado a partir de um Paciente, retornando null
+ * caso falte algum campo obrigatório. Útil pra mapear listas pro mapa.
+ */
+export function toPacienteGeolocalizado(p: Paciente): PacienteGeolocalizado | null {
+  if (!temGeolocalizacao(p)) return null;
+  return {
+    ...p,
+    coords: { lat: p.latitude as number, lng: p.longitude as number },
+    endereco: {
+      cep: p.cep as string,
+      bairro: p.bairro as string,
+      cidade: p.cidade as string,
+      uf: p.uf as string,
+    },
+  };
 }
 
 export interface Colaborador {
