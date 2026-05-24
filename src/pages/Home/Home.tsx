@@ -40,7 +40,7 @@ function Home() {
     <>
       <Header />
 
-      <main className="bg-(--brand-tertiary) min-h-screen">
+      <main className="bg-(--brand-tertiary) min-h-screen animate-fade-in">
         {/* Hero */}
         <section className="relative overflow-hidden">
           <div

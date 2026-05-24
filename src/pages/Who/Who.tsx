@@ -11,7 +11,7 @@ function Who() {
     <>
       <Header />
 
-      <main className="bg-(--brand-tertiary) min-h-screen">
+      <main className="bg-(--brand-tertiary) min-h-screen animate-fade-in">
         <section className="container_page py-16">
           <p className="text-xs font-medium uppercase tracking-wider text-(--brand-primary) mb-2 inline-flex items-center gap-2">
             <Users2 className="w-3.5 h-3.5" />
