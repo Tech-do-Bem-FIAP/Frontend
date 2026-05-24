@@ -2,7 +2,7 @@ import { http } from "./client";
 
 // ─── Backend DTO shapes (verbatim field names) ───────────────────────────────
 
-export interface LoginResponseDTO { role: string; id: number; nome: string; cargo: string | null }
+export interface LoginResponseDTO { role: string; id: number; nome: string; email: string; cargo: string | null }
 
 export interface PacienteDTO {
   idPaciente: number; nome: string; cpf: string | null;
