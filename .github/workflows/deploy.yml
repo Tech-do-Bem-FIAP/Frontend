@@ -23,6 +23,7 @@ jobs:
       - name: Build
         env:
           VITE_API_URL: https://api-java-tdb.labs-lcs-server.com
+          VITE_ML_URL: https://api-ml-tdb.labs-lcs-server.com
         run: npm run build
 
       - name: Deploy static files
