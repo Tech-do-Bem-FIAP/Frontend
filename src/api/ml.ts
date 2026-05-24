@@ -35,6 +35,19 @@ export interface HealthCheckResponse {
   bairros_disponiveis: number;
 }
 
+export interface RankingItem {
+  bairro: string;
+  classe: ClasseDemanda;
+  probabilidades: Record<ClasseDemanda, number>;
+  coords: { lat: number; lng: number };
+}
+
+export interface RankingResponse {
+  modelo_versao: string;
+  total: number;
+  itens: RankingItem[];
+}
+
 /** Wrapper de fetch com tratamento padronizado de erro via ApiError. */
 async function mlRequest<T>(method: string, path: string, body?: unknown): Promise<T> {
   let res: Response;
@@ -77,4 +90,9 @@ export function predizerBatch(
 /** Health check — útil pra mostrar status no dashboard. */
 export function verificarSaudeML(): Promise<HealthCheckResponse> {
   return mlRequest<HealthCheckResponse>("GET", "/health");
+}
+
+/** Ranking de todos os bairros conhecidos, ordenados por prioridade de demanda. */
+export function obterRankingBairros(): Promise<RankingResponse> {
+  return mlRequest<RankingResponse>("GET", "/ranking");
 }
