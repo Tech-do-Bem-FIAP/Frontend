@@ -13,6 +13,7 @@ import Login from "./pages/Login/Login";
 import Colaborador from "./pages/Colaborador/Colaborador";
 import Area from "./pages/Colaborador/Area";
 import Dentista from "./pages/Dentista/Dentista";
+import Sistema from "./pages/Admin/Sistema";
 import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
@@ -52,6 +53,14 @@ function App() {
               element={
                 <ProtectedRoute role="dentista">
                   <Dentista />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="admin/sistema"
+              element={
+                <ProtectedRoute role="colaborador">
+                  <Sistema />
                 </ProtectedRoute>
               }
             />
