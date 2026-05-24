@@ -1,7 +1,3 @@
-// Tela de relatorios consolidados — restrita a cargo === "Administrador".
-// Renderiza os 5 SELECTs da rubrica em cards/tabelas e oferece "Imprimir" via
-// window.print() (zero dependencias adicionais).
-
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router";
 import {
@@ -115,7 +111,7 @@ export default function Relatorios() {
 
         {data && !loading && (
           <>
-            {/* RELATORIO 2 — Estatisticas de idade (topo, formato hero) */}
+            {}
             <Secao
               numero={1}
               titulo="Visão geral dos pacientes"
@@ -129,7 +125,7 @@ export default function Relatorios() {
               </div>
             </Secao>
 
-            {/* RELATORIO 1 — Top 10 dentistas */}
+            {}
             <Secao
               numero={2}
               titulo="Top 10 dentistas por número de pacientes"
@@ -147,7 +143,7 @@ export default function Relatorios() {
               </Tabela>
             </Secao>
 
-            {/* RELATORIO 3 — Atendimentos por status */}
+            {}
             <Secao
               numero={3}
               titulo="Atendimentos por status"
@@ -169,7 +165,7 @@ export default function Relatorios() {
               </Tabela>
             </Secao>
 
-            {/* RELATORIO 4 — Acima da media */}
+            {}
             <Secao
               numero={4}
               titulo="Dentistas acima da média de pacientes"
@@ -192,7 +188,7 @@ export default function Relatorios() {
               )}
             </Secao>
 
-            {/* RELATORIO 5 — Atendimentos detalhados (JOIN) */}
+            {}
             <Secao
               numero={5}
               titulo="Últimos 20 atendimentos"

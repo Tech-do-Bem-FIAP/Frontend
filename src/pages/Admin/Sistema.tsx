@@ -1,7 +1,3 @@
-// Tela administrativa de reconstrução do banco — restrita ao usuário ADMIN.
-// Único caminho de acesso é via login com email="admin@admin.com" / senha="admin".
-// O backend aplica a mesma validação; este gate é só para UX.
-
 import { useState } from "react";
 import { Link, Navigate } from "react-router";
 import {

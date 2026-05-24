@@ -1,5 +1,3 @@
-// Cliente do endpoint GET /api/relatorios — snapshot dos 5 relatorios da rubrica.
-
 import { http } from "./client";
 
 export interface TopDentista {

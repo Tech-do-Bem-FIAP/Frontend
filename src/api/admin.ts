@@ -1,6 +1,3 @@
-// Cliente do endpoint administrativo de reconstrução do banco.
-// Restrito ao usuário ADMIN/ADMIN — a validação real está no backend.
-
 import { http } from "./client";
 
 export interface AdminRebuildRequest {

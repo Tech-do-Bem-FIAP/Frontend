@@ -9,7 +9,6 @@ export const NIVEL_CARGO: Record<CargoColaborador, number> = {
   Administrador: 4,
 };
 
-/** Helper pra checar nível mínimo do cargo logado. */
 export function temNivel(cargo: CargoColaborador | null | undefined, minimo: number): boolean {
   if (!cargo) return false;
   return (NIVEL_CARGO[cargo] ?? 0) >= minimo;
@@ -20,7 +19,7 @@ export interface AuthUser {
   nome: string;
   email: string;
   role: UserRole;
-  /** Só presente quando role === 'colaborador'. */
+
   cargo: CargoColaborador | null;
 }
 
@@ -43,7 +42,7 @@ export interface Paciente {
   telefone: string;
   email: string;
   id_dentista: number;
-  /** Campos de endereço/geolocalização — opcionais (null pra pacientes sem geocoding). */
+
   cep?: string | null;
   logradouro?: string | null;
   bairro?: string | null;
@@ -53,16 +52,11 @@ export interface Paciente {
   longitude?: number | null;
 }
 
-/**
- * Intersection Type — Paciente que já possui coordenadas e endereço resolvidos.
- * Usado em telas que exigem geolocalização garantida (ex: mapa, página de área).
- */
 export type PacienteGeolocalizado = Paciente & {
   coords: { lat: number; lng: number };
   endereco: { cep: string; bairro: string; cidade: string; uf: string };
 };
 
-/** Type guard — verifica se o paciente possui coordenadas + endereço completos. */
 export function temGeolocalizacao(p: Paciente): boolean {
   return (
     p.latitude != null &&
@@ -74,10 +68,6 @@ export function temGeolocalizacao(p: Paciente): boolean {
   );
 }
 
-/**
- * Constrói um PacienteGeolocalizado a partir de um Paciente, retornando null
- * caso falte algum campo obrigatório. Útil pra mapear listas pro mapa.
- */
 export function toPacienteGeolocalizado(p: Paciente): PacienteGeolocalizado | null {
   if (!temGeolocalizacao(p)) return null;
   return {
@@ -133,14 +123,13 @@ export interface Atendimento {
   exames: Exame[];
 }
 
-/** Direção da notificação — inferida pelas FKs preenchidas no backend. */
 export type NotificacaoTipo = 'col_to_den' | 'den_to_pac';
 
 export interface Notificacao {
   id: number;
   mensagem: string;
   data_envio: string;
-  data_leitura: string | null; // null = não lida (ou irrelevante p/ den→pac)
+  data_leitura: string | null;
   tipo: NotificacaoTipo;
   id_dentista: number | null;
   id_colaborador: number | null;
@@ -154,7 +143,7 @@ export type StatusSolicitacao = 'pendente' | 'aprovada' | 'rejeitada';
 
 export interface Solicitacao {
   id: number;
-  /** Null quando o solicitante é externo (cadastro pela tela de login). */
+
   id_solicitante: number | null;
   nome_solicitante: string | null;
   tipo: string;
@@ -165,13 +154,13 @@ export interface Solicitacao {
   nome_revisor: string | null;
   data_revisao: string | null;
   comentario_revisao: string | null;
-  /** Dados de quem ainda não é colaborador (presentes quando id_solicitante é null). */
+
   nome_externo: string | null;
   cpf_externo: string | null;
   email_externo: string | null;
   senha_externo: string | null;
   telefone_externo: string | null;
-  /** Colaborador recém-criado ao aprovar uma solicitação externa. */
+
   id_colaborador_criado: number | null;
 }
 

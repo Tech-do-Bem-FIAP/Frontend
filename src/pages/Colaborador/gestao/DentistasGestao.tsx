@@ -30,8 +30,8 @@ function errMsg(e: unknown) {
 }
 
 export function DentistasGestao({ cargo }: { cargo: CargoColaborador }) {
-  const podeCriarExcluir = temNivel(cargo, 4); // Admin
-  const podeEditar = temNivel(cargo, 2);       // Aux+
+  const podeCriarExcluir = temNivel(cargo, 4);
+  const podeEditar = temNivel(cargo, 2);
 
   const [dentistas, setDentistas] = useState<Dentista[]>([]);
   const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);

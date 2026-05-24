@@ -50,8 +50,6 @@ import { SolicitacoesGestao } from "./gestao/SolicitacoesGestao";
 
 type Tab = "dentistas" | "notificacoes" | "anotacoes" | "solicitacoes" | "mapa" | "analise" | "gestao";
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("pt-BR");
 }
@@ -86,8 +84,6 @@ const TABS: { key: Tab; label: string; Icon: React.ElementType }[] = [
   { key: "analise", label: "Análise", Icon: TrendingUp },
   { key: "gestao", label: "Gestão", Icon: Settings },
 ];
-
-// ─── Mapa tab ───────────────────────────────────────────────────────────────
 
 function MapaTab() {
   const [pacientes, setPacientes] = useState<PacienteGeolocalizado[]>([]);
@@ -148,8 +144,6 @@ function MapaTab() {
     </div>
   );
 }
-
-// ─── Análise tab (heatmap ML) ───────────────────────────────────────────────
 
 const CLASSE_CORES: Record<ClasseDemanda, { bg: string; text: string; bar: string }> = {
   Alta:  { bg: "bg-red-50",    text: "text-red-700",    bar: "bg-red-500" },
@@ -256,16 +250,14 @@ function AnaliseTab() {
   );
 }
 
-// ─── Dentistas tab ──────────────────────────────────────────────────────────
-
 interface DentistaStats {
   dentista: Dentista;
   pacientes: number;
   realizados: number;
   agendados: number;
-  /** Atendimentos agendados nos próximos 7 dias. */
+
   proximos7d: number;
-  /** Exames sem resultado preenchido. */
+
   examesPendentes: number;
 }
 
@@ -329,7 +321,6 @@ function DentistasTab({
       );
       setRows(stats);
 
-      // Visão global: carrega colaboradores pra mostrar nome do responsável.
       if (visaoGlobal) {
         const colabs = await getTodosColaboradores();
         const m = new Map<number, string>();
@@ -349,12 +340,10 @@ function DentistasTab({
     void load();
   }, [load]);
 
-  // Especialidades únicas pro dropdown de filtro.
   const especialidades = Array.from(
     new Set(rows.map((r) => r.dentista.especialidade).filter(Boolean)),
   ).sort();
 
-  // Filtragem + ordenação.
   const visiveis = rows
     .filter((r) => {
       if (filtroEsp !== "todas" && r.dentista.especialidade !== filtroEsp) return false;
@@ -586,8 +575,6 @@ function Stat({ label, value }: { label: string; value: number }) {
   );
 }
 
-// ─── Notificações tab ───────────────────────────────────────────────────────
-
 type SendNotifForm = { destinatario_id: string; mensagem: string };
 
 function NotificacoesTab({
@@ -630,7 +617,6 @@ function NotificacoesTab({
   const getDentistaNome = (id: number | null) =>
     id == null ? "—" : dentistas.find((d) => d.id === id)?.nome ?? `#${id}`;
 
-  // Filtro de dentista destinatário nas enviadas.
   const [filtroEnviadas, setFiltroEnviadas] = useState<number | "todos">("todos");
 
   const enviadasFiltradas =
@@ -641,14 +627,12 @@ function NotificacoesTab({
   const aguardando = enviadasFiltradas.filter((n) => n.data_leitura == null);
   const lidasEnviadas = enviadasFiltradas.filter((n) => n.data_leitura != null);
 
-  // Dentistas que JÁ receberam alguma mensagem deste colaborador (só esses no filtro).
   const dentistasComEnviadas = (() => {
     const ids = new Set<number>();
     for (const n of enviadas) if (n.id_dentista != null) ids.add(n.id_dentista);
     return dentistas.filter((d) => ids.has(d.id));
   })();
 
-  // Agrupa as enviadas filtradas por dentista, preservando ordem cronológica.
   function agruparPorDentista(ns: Notificacao[]) {
     const grupos = new Map<number, Notificacao[]>();
     for (const n of ns) {
@@ -680,7 +664,6 @@ function NotificacoesTab({
     },
   });
 
-  // Quando o usuário chega via atalho, pré-seleciona o dentista no form.
   useEffect(() => {
     if (initialDentistaId) setValue("destinatario_id", String(initialDentistaId));
   }, [initialDentistaId, setValue]);
@@ -812,7 +795,7 @@ function NotificacoesTab({
         )}
 
         <div className="space-y-6">
-          {/* Aguardando leitura */}
+          {}
           {aguardandoAgrupadas.length > 0 && (
             <div className="space-y-3">
               <h4 className="text-sm font-medium text-amber-700 flex items-center gap-2">
@@ -832,7 +815,7 @@ function NotificacoesTab({
             </div>
           )}
 
-          {/* Lidas pelo dentista */}
+          {}
           {lidasAgrupadas.length > 0 && (
             <div className="space-y-3">
               <h4 className="text-sm font-medium text-(--text-secondary-color)">
@@ -932,8 +915,6 @@ function DentistaGrupo({
   );
 }
 
-// ─── Anotações tab ──────────────────────────────────────────────────────────
-
 function AnotacoesSkeleton({ readOnly }: { readOnly: boolean }) {
   return (
     <div className="space-y-5">
@@ -983,7 +964,7 @@ function AnotacoesTab({
     try {
       const dts = await getDentistasByColaborador(colaboradorId);
       setDentistas(dts);
-      // Honra o dentista pré-selecionado vindo de um atalho, se ele estiver na lista.
+
       const preselecionado = initialDentistaId != null
         && dts.some((d) => d.id === initialDentistaId)
         ? initialDentistaId
@@ -1113,8 +1094,6 @@ function AnotacoesTab({
   );
 }
 
-// ─── Gestão tab ─────────────────────────────────────────────────────────────
-
 type GestaoSub =
   | "pacientes"
   | "campanhas"
@@ -1125,9 +1104,9 @@ interface SubTabDef {
   key: GestaoSub;
   label: string;
   Icon: React.ElementType;
-  /** Nível mínimo do cargo logado pra ver esta sub-aba. */
+
   minNivel: number;
-  /** Texto da pílula de permissão (ex: "Auxiliar+", "Administrador"). */
+
   badge: string;
 }
 
@@ -1222,17 +1201,15 @@ function GestaoPlaceholder({
   );
 }
 
-// ─── Page ────────────────────────────────────────────────────────────────────
-
 export default function Colaborador() {
   const { user } = useAuth();
   const colaboradorId = user!.id;
   const cargo = user!.cargo;
   const isEstagiario = cargo === "Estagiário";
-  // Gestão é só pra quem realmente gere (Auxiliar+). Solicitações é pra todos.
+
   const podeGestao = temNivel(cargo, 2);
   const [tab, setTab] = useState<Tab>("dentistas");
-  // Dentista pré-selecionado ao chegar via atalho de outra aba.
+
   const [dentistaContexto, setDentistaContexto] = useState<number | null>(null);
 
   const irParaAba = (destino: Tab, dentistaId?: number) => {
