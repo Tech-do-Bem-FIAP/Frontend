@@ -17,6 +17,7 @@ import {
   Search,
   Calendar,
   AlertCircle,
+  Map as MapIcon,
 } from "lucide-react";
 import { DashboardHeader } from "../../components/DashboardHeader/DashboardHeader";
 import { useAuth } from "../../contexts/AuthContext";
@@ -28,19 +29,21 @@ import {
   getAtendimentosByDentista,
   getNotificacoesEnviadasColaborador,
   enviarColaboradorParaDentista,
+  getTodosPacientes,
 } from "../../data/api";
 import { getAnotacoesSobre, saveAnotacao } from "../../data/api";
 import { ApiError } from "../../api/client";
 import { tempoRelativo, tempoExato } from "../../utils/tempo";
-import { temNivel } from "../../types";
-import type { CargoColaborador, Dentista, Notificacao, Anotacao } from "../../types";
+import { temNivel, toPacienteGeolocalizado } from "../../types";
+import type { CargoColaborador, Dentista, Notificacao, Anotacao, PacienteGeolocalizado } from "../../types";
+import { MapaPacientes } from "../../components/MapaPacientes/MapaPacientes";
 import { PacientesGestao } from "./gestao/PacientesGestao";
 import { CampanhasGestao } from "./gestao/CampanhasGestao";
 import { DentistasGestao } from "./gestao/DentistasGestao";
 import { ColaboradoresGestao } from "./gestao/ColaboradoresGestao";
 import { SolicitacoesGestao } from "./gestao/SolicitacoesGestao";
 
-type Tab = "dentistas" | "notificacoes" | "anotacoes" | "solicitacoes" | "gestao";
+type Tab = "dentistas" | "notificacoes" | "anotacoes" | "solicitacoes" | "mapa" | "gestao";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -83,8 +86,64 @@ const TABS: { key: Tab; label: string; Icon: React.ElementType }[] = [
   { key: "notificacoes", label: "Notificações", Icon: Bell },
   { key: "anotacoes", label: "Anotações", Icon: FileText },
   { key: "solicitacoes", label: "Solicitações", Icon: Inbox },
+  { key: "mapa", label: "Mapa", Icon: MapIcon },
   { key: "gestao", label: "Gestão", Icon: Settings },
 ];
+
+// ─── Mapa tab ───────────────────────────────────────────────────────────────
+
+function MapaTab() {
+  const [pacientes, setPacientes] = useState<PacienteGeolocalizado[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const todos = await getTodosPacientes();
+      setTotal(todos.length);
+      const geo = todos
+        .map(toPacienteGeolocalizado)
+        .filter((p): p is PacienteGeolocalizado => p != null);
+      setPacientes(geo);
+    } catch (err) {
+      setError(errorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { void load(); }, [load]);
+
+  if (loading) return <LoadingBlock label="Carregando pacientes no mapa..." />;
+  if (error) return <ErrorBlock message={error} onRetry={load} />;
+
+  const semGeo = total - pacientes.length;
+
+  return (
+    <div className="space-y-3">
+      <div className="bg-white border border-gray-200 rounded-xl p-3 text-sm text-(--text-color)">
+        Exibindo <span className="font-semibold text-(--brand-primary)">{pacientes.length}</span>
+        {" "}pacientes com coordenadas
+        {semGeo > 0 && (
+          <span className="text-(--text-secondary-color)">
+            {" "}· {semGeo} sem endereço/geocoding
+          </span>
+        )}.
+      </div>
+      {pacientes.length === 0 ? (
+        <p className="text-center text-(--text-secondary-color) py-8 text-sm">
+          Nenhum paciente possui coordenadas cadastradas ainda. Use o formulário de
+          paciente pra preencher CEP e localizar no mapa.
+        </p>
+      ) : (
+        <MapaPacientes pacientes={pacientes} />
+      )}
+    </div>
+  );
+}
 
 // ─── Dentistas tab ──────────────────────────────────────────────────────────
 
@@ -983,7 +1042,8 @@ export default function Colaborador() {
 
   const tabsVisiveis = TABS.filter((t) => t.key !== "gestao" || podeGestao);
   const gridClass =
-    tabsVisiveis.length === 5 ? "grid-cols-5"
+    tabsVisiveis.length === 6 ? "grid-cols-6"
+    : tabsVisiveis.length === 5 ? "grid-cols-5"
     : tabsVisiveis.length === 4 ? "grid-cols-4"
     : "grid-cols-3";
 
@@ -1035,6 +1095,7 @@ export default function Colaborador() {
         {tab === "solicitacoes" && cargo && (
           <SolicitacoesGestao cargo={cargo} />
         )}
+        {tab === "mapa" && <MapaTab />}
         {tab === "gestao" && podeGestao && cargo && (
           <GestaoTab cargo={cargo} />
         )}
