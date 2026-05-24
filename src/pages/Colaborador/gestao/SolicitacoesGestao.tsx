@@ -228,7 +228,7 @@ function SolicitacaoCard({
 
   return (
     <div
-      className={`bg-white border border-gray-200 border-l-4 rounded-xl p-4 space-y-2 ${
+      className={`bg-white border border-gray-200 border-l-4 rounded-xl p-4 space-y-2 animate-fade-in ${
         ehExterna ? "border-l-purple-500" : "border-l-(--brand-primary)"
       }`}
     >
