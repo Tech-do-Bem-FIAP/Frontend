@@ -1,4 +1,4 @@
-import { LogOut, Database } from "lucide-react";
+import { LogOut, Database, FileText } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import logo from "../../assets/logo-tech-do-bem.webp";
@@ -40,6 +40,16 @@ export function DashboardHeader() {
         </div>
 
         <div className="flex items-center gap-2">
+          {isAdmin && (
+            <Link
+              to="/admin/relatorios"
+              className="flex items-center gap-2 bg-white/20 hover:bg-white/30 transition-colors rounded-full px-4 py-1.5 text-sm font-medium"
+              title="Relatórios consolidados"
+            >
+              <FileText className="w-4 h-4" />
+              Relatórios
+            </Link>
+          )}
           {isAdminEspecial && (
             <Link
               to="/admin/sistema"
