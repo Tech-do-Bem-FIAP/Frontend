@@ -56,7 +56,7 @@ function About() {
     <>
       <Header />
 
-      <main className="bg-(--brand-tertiary) min-h-screen">
+      <main className="bg-(--brand-tertiary) min-h-screen animate-fade-in">
         <section className="container_page py-16">
           <p className="text-xs font-medium uppercase tracking-wider text-(--brand-primary) mb-2">
             Sobre o projeto
