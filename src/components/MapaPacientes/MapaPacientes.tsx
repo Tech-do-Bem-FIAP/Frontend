@@ -1,6 +1,3 @@
-// Mapa Leaflet exibindo pacientes geolocalizados.
-// Cada Marker abre Popup com link pra página do bairro (/colaborador/area/:bairro).
-
 import L from "leaflet";
 import iconUrl from "leaflet/dist/images/marker-icon.png";
 import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
@@ -9,8 +6,6 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Link } from "react-router";
 import type { PacienteGeolocalizado } from "../../types";
 
-// Fix do bug clássico do Leaflet com bundlers: o ícone padrão quebra porque
-// o Leaflet tenta resolver os assets via URL relativa do CSS.
 L.Marker.prototype.options.icon = L.icon({
   iconUrl,
   iconRetinaUrl,
@@ -23,9 +18,9 @@ L.Marker.prototype.options.icon = L.icon({
 
 interface Props {
   pacientes: PacienteGeolocalizado[];
-  /** Centro inicial. Default: São Paulo. */
+
   center?: [number, number];
-  /** Zoom inicial. Default: 11. */
+
   zoom?: number;
 }
 

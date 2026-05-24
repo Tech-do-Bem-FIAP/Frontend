@@ -1,6 +1,3 @@
-// Cliente para a API de Machine Learning (Flask) — predições de demanda por bairro.
-// Reusa o tipo ApiError do client REST principal pra padronizar tratamento de erro.
-
 import { ApiError } from "./client";
 
 const ML_BASE_URL =
@@ -15,7 +12,6 @@ export interface PredicaoML {
   bairro?: string;
 }
 
-/** Features completas pra quando o user quer prever sem cair no lookup por bairro. */
 export interface FeaturesCompletas {
   densidade_pop: number;
   idh: number;
@@ -48,7 +44,6 @@ export interface RankingResponse {
   itens: RankingItem[];
 }
 
-/** Wrapper de fetch com tratamento padronizado de erro via ApiError. */
 async function mlRequest<T>(method: string, path: string, body?: unknown): Promise<T> {
   let res: Response;
   try {
@@ -75,24 +70,20 @@ async function mlRequest<T>(method: string, path: string, body?: unknown): Promi
   return data as T;
 }
 
-/** Predição única — aceita lookup por bairro OU features completas. */
 export function predizerDemanda(input: PredicaoInput): Promise<PredicaoML> {
   return mlRequest<PredicaoML>("POST", "/predict", input);
 }
 
-/** Predição em batch — cada item da resposta tem `index` correlacionado à entrada. */
 export function predizerBatch(
   inputs: Array<{ bairro: string }>,
 ): Promise<Array<PredicaoML & { index: number }>> {
   return mlRequest<Array<PredicaoML & { index: number }>>("POST", "/predict/batch", inputs);
 }
 
-/** Health check — útil pra mostrar status no dashboard. */
 export function verificarSaudeML(): Promise<HealthCheckResponse> {
   return mlRequest<HealthCheckResponse>("GET", "/health");
 }
 
-/** Ranking de todos os bairros conhecidos, ordenados por prioridade de demanda. */
 export function obterRankingBairros(): Promise<RankingResponse> {
   return mlRequest<RankingResponse>("GET", "/ranking");
 }

@@ -41,7 +41,7 @@ function Home() {
       <Header />
 
       <main className="bg-(--brand-tertiary) min-h-screen animate-fade-in">
-        {/* Hero */}
+        {}
         <section className="relative overflow-hidden">
           <div
             aria-hidden="true"
@@ -78,7 +78,7 @@ function Home() {
           </div>
         </section>
 
-        {/* Features */}
+        {}
         <section className="container_page py-16">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <p className="text-xs font-medium uppercase tracking-wider text-(--brand-primary) mb-2">
@@ -108,7 +108,7 @@ function Home() {
           </div>
         </section>
 
-        {/* Manifesto cards */}
+        {}
         <section className="space-y-0">
           <div className="bg-white border-l-4 border-l-(--brand-primary) border-b border-gray-100 py-12">
             <div className="container_page">
@@ -162,7 +162,7 @@ function Home() {
           </div>
         </section>
 
-        {/* CTA */}
+        {}
         <section className="container_page py-20 text-center">
           <Sparkles className="w-8 h-8 text-(--brand-primary) mx-auto mb-4" />
           <h3 className="title3 font-bold mb-6">

@@ -1,5 +1,5 @@
 :root {
-  /* Colors */
+
   --brand-primary: #da345d;
   --brand-secondary: #641226;
   --brand-tertiary: #f1f1f1;
@@ -10,7 +10,6 @@
   --text-color: #232323;
   --text-secondary-color: #d4d4d4;
 
-  /* Text */
   --title-font-style: "Bruno Ace", sans-serif;
   --text-font-style: "Saira", sans-serif;
   --text-small: 1rem;
