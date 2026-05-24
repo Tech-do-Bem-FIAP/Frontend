@@ -533,29 +533,31 @@ function DentistaCard({
         )}
       </button>
 
-      {open && (
-        <div className="border-t border-gray-100 px-4 pb-4 pt-3 space-y-3">
-          <div className="grid grid-cols-3 gap-2">
-            <Stat label="Pacientes" value={pacientes} />
-            <Stat label="Realizados" value={realizados} />
-            <Stat label="Agendados" value={agendados} />
-          </div>
-          <div className="flex items-center gap-2 flex-wrap pt-1">
-            <button
-              onClick={onNotificar}
-              className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-(--brand-primary) text-(--brand-primary) hover:bg-(--brand-tertiary)"
-            >
-              <Bell className="w-3.5 h-3.5" /> Enviar notificação
-            </button>
-            <button
-              onClick={onAnotar}
-              className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-(--brand-primary) text-(--brand-primary) hover:bg-(--brand-tertiary)"
-            >
-              <FileText className="w-3.5 h-3.5" /> Ver anotações
-            </button>
+      <div className="collapsible" data-open={open}>
+        <div>
+          <div className="border-t border-gray-100 px-4 pb-4 pt-3 space-y-3">
+            <div className="grid grid-cols-3 gap-2">
+              <Stat label="Pacientes" value={pacientes} />
+              <Stat label="Realizados" value={realizados} />
+              <Stat label="Agendados" value={agendados} />
+            </div>
+            <div className="flex items-center gap-2 flex-wrap pt-1">
+              <button
+                onClick={onNotificar}
+                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-(--brand-primary) text-(--brand-primary) hover:bg-(--brand-tertiary)"
+              >
+                <Bell className="w-3.5 h-3.5" /> Enviar notificação
+              </button>
+              <button
+                onClick={onAnotar}
+                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg border border-(--brand-primary) text-(--brand-primary) hover:bg-(--brand-tertiary)"
+              >
+                <FileText className="w-3.5 h-3.5" /> Ver anotações
+              </button>
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { useId, useState } from "react";
 import type React from "react";
 import { ChevronDown } from "lucide-react";
 
@@ -10,16 +11,32 @@ export const Accordion = ({
   question,
   answer,
 }: AccordionProps): React.JSX.Element => {
+  const [open, setOpen] = useState(false);
+  const contentId = useId();
+
   return (
-    <details
-      name="FAQ"
-      className="group w-full p-5 bg-white border border-gray-200 border-l-4 border-l-(--brand-primary) rounded-xl cursor-pointer shadow-sm hover:shadow-md transition-shadow"
-    >
-      <summary className="text-lg font-medium text-(--brand-secondary) list-none flex justify-between items-center gap-4">
+    <div className="w-full bg-white border border-gray-200 border-l-4 border-l-(--brand-primary) rounded-xl shadow-sm hover:shadow-md transition-shadow">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={contentId}
+        className="w-full p-5 text-lg font-medium text-(--brand-secondary) flex justify-between items-center gap-4 text-left cursor-pointer"
+      >
         <span>{question}</span>
-        <ChevronDown className="w-5 h-5 text-(--brand-primary) shrink-0 transition-transform duration-200 group-open:rotate-180" />
-      </summary>
-      <p className="text-(--text-color) pt-4 leading-relaxed">{answer}</p>
-    </details>
+        <ChevronDown
+          className={`w-5 h-5 text-(--brand-primary) shrink-0 transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+      <div id={contentId} className="collapsible" data-open={open}>
+        <div>
+          <p className="px-5 pb-5 text-(--text-color) leading-relaxed">
+            {answer}
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
