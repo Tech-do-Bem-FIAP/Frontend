@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router";
 import {
   Users,
   Bell,
@@ -18,6 +19,7 @@ import {
   Calendar,
   AlertCircle,
   Map as MapIcon,
+  TrendingUp,
 } from "lucide-react";
 import { DashboardHeader } from "../../components/DashboardHeader/DashboardHeader";
 import { useAuth } from "../../contexts/AuthContext";
@@ -37,13 +39,16 @@ import { tempoRelativo, tempoExato } from "../../utils/tempo";
 import { temNivel, toPacienteGeolocalizado } from "../../types";
 import type { CargoColaborador, Dentista, Notificacao, Anotacao, PacienteGeolocalizado } from "../../types";
 import { MapaPacientes } from "../../components/MapaPacientes/MapaPacientes";
+import { HeatmapAreas } from "../../components/HeatmapAreas/HeatmapAreas";
+import { obterRankingBairros } from "../../api/ml";
+import type { ClasseDemanda, RankingItem } from "../../api/ml";
 import { PacientesGestao } from "./gestao/PacientesGestao";
 import { CampanhasGestao } from "./gestao/CampanhasGestao";
 import { DentistasGestao } from "./gestao/DentistasGestao";
 import { ColaboradoresGestao } from "./gestao/ColaboradoresGestao";
 import { SolicitacoesGestao } from "./gestao/SolicitacoesGestao";
 
-type Tab = "dentistas" | "notificacoes" | "anotacoes" | "solicitacoes" | "mapa" | "gestao";
+type Tab = "dentistas" | "notificacoes" | "anotacoes" | "solicitacoes" | "mapa" | "analise" | "gestao";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -87,6 +92,7 @@ const TABS: { key: Tab; label: string; Icon: React.ElementType }[] = [
   { key: "anotacoes", label: "Anotações", Icon: FileText },
   { key: "solicitacoes", label: "Solicitações", Icon: Inbox },
   { key: "mapa", label: "Mapa", Icon: MapIcon },
+  { key: "analise", label: "Análise", Icon: TrendingUp },
   { key: "gestao", label: "Gestão", Icon: Settings },
 ];
 
@@ -141,6 +147,105 @@ function MapaTab() {
       ) : (
         <MapaPacientes pacientes={pacientes} />
       )}
+    </div>
+  );
+}
+
+// ─── Análise tab (heatmap ML) ───────────────────────────────────────────────
+
+const CLASSE_CORES: Record<ClasseDemanda, { bg: string; text: string; bar: string }> = {
+  Alta:  { bg: "bg-red-50",    text: "text-red-700",    bar: "bg-red-500" },
+  Media: { bg: "bg-amber-50",  text: "text-amber-700",  bar: "bg-amber-500" },
+  Baixa: { bg: "bg-green-50",  text: "text-green-700",  bar: "bg-green-600" },
+};
+
+function AnaliseTab() {
+  const [itens, setItens] = useState<RankingItem[]>([]);
+  const [versao, setVersao] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const resp = await obterRankingBairros();
+      setItens(resp.itens);
+      setVersao(resp.modelo_versao);
+    } catch (err) {
+      setError(errorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { void load(); }, [load]);
+
+  if (loading) return <LoadingBlock label="Carregando análise de áreas..." />;
+  if (error) return <ErrorBlock message={error} onRetry={load} />;
+
+  const contagem = itens.reduce(
+    (acc, it) => { acc[it.classe] = (acc[it.classe] ?? 0) + 1; return acc; },
+    {} as Record<ClasseDemanda, number>,
+  );
+  const top10 = itens.slice(0, 10);
+
+  return (
+    <div className="space-y-4">
+      <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <h2 className="font-semibold text-(--brand-secondary)">
+              Áreas prioritárias para a Turma do Bem
+            </h2>
+            <p className="text-xs text-(--text-secondary-color) mt-0.5">
+              Modelo: {versao} · {itens.length} bairros analisados
+            </p>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-2 text-center">
+          {(["Alta", "Media", "Baixa"] as ClasseDemanda[]).map((c) => {
+            const cor = CLASSE_CORES[c];
+            return (
+              <div key={c} className={`${cor.bg} rounded-lg p-2`}>
+                <p className={`text-2xl font-bold ${cor.text}`}>
+                  {contagem[c] ?? 0}
+                </p>
+                <p className={`text-xs font-medium ${cor.text}`}>{c} demanda</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <HeatmapAreas itens={itens} />
+
+      <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-2">
+        <h3 className="font-semibold text-(--brand-secondary) mb-2">
+          Top 10 bairros prioritários
+        </h3>
+        {top10.map((it, idx) => {
+          const cor = CLASSE_CORES[it.classe];
+          const p = Math.round((it.probabilidades[it.classe] ?? 0) * 100);
+          return (
+            <Link
+              key={it.bairro}
+              to={`/colaborador/area/${encodeURIComponent(it.bairro)}`}
+              className="flex items-center gap-3 py-2 border-b border-gray-100 last:border-b-0 hover:bg-(--brand-tertiary)/50 -mx-1 px-1 rounded transition-colors"
+            >
+              <span className="text-xs font-medium text-(--text-secondary-color) w-5 text-right">
+                {idx + 1}.
+              </span>
+              <span className="flex-1 text-sm font-medium text-(--text-color)">
+                {it.bairro}
+              </span>
+              <span className={`text-xs font-medium ${cor.text} ${cor.bg} px-2 py-0.5 rounded-full`}>
+                {it.classe} · {p}%
+              </span>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -1042,7 +1147,8 @@ export default function Colaborador() {
 
   const tabsVisiveis = TABS.filter((t) => t.key !== "gestao" || podeGestao);
   const gridClass =
-    tabsVisiveis.length === 6 ? "grid-cols-6"
+    tabsVisiveis.length === 7 ? "grid-cols-7"
+    : tabsVisiveis.length === 6 ? "grid-cols-6"
     : tabsVisiveis.length === 5 ? "grid-cols-5"
     : tabsVisiveis.length === 4 ? "grid-cols-4"
     : "grid-cols-3";
@@ -1096,6 +1202,7 @@ export default function Colaborador() {
           <SolicitacoesGestao cargo={cargo} />
         )}
         {tab === "mapa" && <MapaTab />}
+        {tab === "analise" && <AnaliseTab />}
         {tab === "gestao" && podeGestao && cargo && (
           <GestaoTab cargo={cargo} />
         )}
