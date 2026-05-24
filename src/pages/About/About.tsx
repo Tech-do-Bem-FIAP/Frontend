@@ -93,18 +93,28 @@ function About() {
 
         <section className="container_page pb-20">
           <h2 className="title3 font-bold mb-6">A nossa jornada</h2>
-          <ol className="relative border-l-2 border-(--brand-primary)/30 ml-3 space-y-8">
-            {timeline.map(({ Icon, label, body }) => (
-              <li key={label} className="ml-6 relative">
-                <span className="absolute -left-[2.4rem] top-0 w-10 h-10 rounded-full bg-white border-2 border-(--brand-primary) text-(--brand-primary) flex items-center justify-center shadow-sm">
-                  <Icon className="w-4 h-4" />
-                </span>
-                <p className="text-xs font-medium uppercase tracking-wider text-(--brand-primary) mb-1">
-                  {label}
-                </p>
-                <p className="text-base text-(--text-color) leading-relaxed">
-                  {body}
-                </p>
+          <ol>
+            {timeline.map(({ Icon, label, body }, i) => (
+              <li key={label} className="flex gap-5">
+                <div className="flex flex-col items-center shrink-0">
+                  <span className="w-10 h-10 rounded-full bg-white border-2 border-(--brand-primary) text-(--brand-primary) flex items-center justify-center shadow-sm">
+                    <Icon className="w-4 h-4" />
+                  </span>
+                  {i < timeline.length - 1 && (
+                    <span
+                      aria-hidden="true"
+                      className="w-0.5 grow bg-(--brand-primary)/30 my-2"
+                    />
+                  )}
+                </div>
+                <div className="flex-1 pb-8">
+                  <p className="text-xs font-medium uppercase tracking-wider text-(--brand-primary) mb-1">
+                    {label}
+                  </p>
+                  <p className="text-base text-(--text-color) leading-relaxed">
+                    {body}
+                  </p>
+                </div>
               </li>
             ))}
           </ol>
