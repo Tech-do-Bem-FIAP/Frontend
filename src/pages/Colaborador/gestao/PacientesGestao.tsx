@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Pencil, Plus, Trash2, X, Loader2, Search } from "lucide-react";
+import { Pencil, Plus, Trash2, X, Loader2, Search, MapPin } from "lucide-react";
 import {
   getTodosPacientes,
   getTodosDentistas,
@@ -10,6 +10,7 @@ import {
 } from "../../../data/api";
 import { ApiError } from "../../../api/client";
 import type { Paciente, Dentista } from "../../../types";
+import { consultarCep, geocodificar } from "../../../utils/geocoding";
 
 interface FormValues {
   nome: string;
@@ -18,6 +19,11 @@ interface FormValues {
   telefone: string;
   email: string;
   id_dentista: string; // <select> sempre devolve string
+  cep: string;
+  logradouro: string;
+  bairro: string;
+  cidade: string;
+  uf: string;
 }
 
 function calcIdade(dataNasc: string): number | null {
@@ -37,6 +43,7 @@ function errMsg(e: unknown) {
 
 const EMPTY: FormValues = {
   nome: "", cpf: "", data_nasc: "", telefone: "", email: "", id_dentista: "",
+  cep: "", logradouro: "", bairro: "", cidade: "", uf: "",
 };
 
 export function PacientesGestao() {
@@ -203,8 +210,19 @@ function PacienteForm({
 }) {
   const isEdit = initial != null;
   const [submitErr, setSubmitErr] = useState<string | null>(null);
+  const [cepLoading, setCepLoading] = useState(false);
+  const [cepErr, setCepErr] = useState<string | null>(null);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
+    initial && initial.latitude != null && initial.longitude != null
+      ? { lat: initial.latitude, lng: initial.longitude }
+      : null,
+  );
+  const [geoLoading, setGeoLoading] = useState(false);
+  const [geoErr, setGeoErr] = useState<string | null>(null);
+  const cepDebounce = useRef<number | null>(null);
+
   const {
-    register, handleSubmit, formState: { errors, isSubmitting },
+    register, handleSubmit, setValue, getValues, watch, formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     defaultValues: initial
       ? {
@@ -214,12 +232,85 @@ function PacienteForm({
           telefone: initial.telefone,
           email: initial.email,
           id_dentista: String(initial.id_dentista),
+          cep: initial.cep ?? "",
+          logradouro: initial.logradouro ?? "",
+          bairro: initial.bairro ?? "",
+          cidade: initial.cidade ?? "",
+          uf: initial.uf ?? "",
         }
       : EMPTY,
   });
 
+  const cep = watch("cep");
+
+  /** Dispara ViaCEP quando o CEP fica completo (8 dígitos). */
+  const lookupCep = useCallback(async (raw: string) => {
+    const limpo = raw.replace(/\D/g, "");
+    if (limpo.length !== 8) return;
+    setCepLoading(true);
+    setCepErr(null);
+    try {
+      const endereco = await consultarCep(limpo);
+      if (!endereco) {
+        setCepErr("CEP não encontrado.");
+        return;
+      }
+      // Preserva valores manuais já digitados quando ViaCEP devolve campos vazios.
+      if (endereco.logradouro) setValue("logradouro", endereco.logradouro, { shouldDirty: true });
+      if (endereco.bairro) setValue("bairro", endereco.bairro, { shouldDirty: true });
+      if (endereco.cidade) setValue("cidade", endereco.cidade, { shouldDirty: true });
+      if (endereco.uf) setValue("uf", endereco.uf, { shouldDirty: true });
+      // Coords ficam stale se o usuário trocar de CEP — força nova busca manual.
+      setCoords(null);
+    } finally {
+      setCepLoading(false);
+    }
+  }, [setValue]);
+
+  // Debounce de 400ms no onChange do CEP — backup caso o user não saia do campo.
+  useEffect(() => {
+    if (cepDebounce.current != null) {
+      window.clearTimeout(cepDebounce.current);
+    }
+    const limpo = (cep ?? "").replace(/\D/g, "");
+    if (limpo.length !== 8) return;
+    cepDebounce.current = window.setTimeout(() => {
+      void lookupCep(limpo);
+    }, 400);
+    return () => {
+      if (cepDebounce.current != null) window.clearTimeout(cepDebounce.current);
+    };
+  }, [cep, lookupCep]);
+
+  const localizarNoMapa = async () => {
+    const v = getValues();
+    if (!v.logradouro || !v.cidade || !v.uf) {
+      setGeoErr("Preencha logradouro, cidade e UF antes de geocodificar.");
+      return;
+    }
+    setGeoLoading(true);
+    setGeoErr(null);
+    try {
+      const result = await geocodificar({
+        logradouro: v.logradouro,
+        bairro: v.bairro,
+        cidade: v.cidade,
+        uf: v.uf,
+      });
+      if (!result) {
+        setGeoErr("Endereço não localizado no Nominatim.");
+        setCoords(null);
+        return;
+      }
+      setCoords(result);
+    } finally {
+      setGeoLoading(false);
+    }
+  };
+
   const onSubmit = async (v: FormValues) => {
     setSubmitErr(null);
+    const cepLimpo = v.cep.replace(/\D/g, "");
     const payload = {
       nome: v.nome.trim(),
       cpf: v.cpf.trim() || null,
@@ -227,6 +318,13 @@ function PacienteForm({
       telefone: v.telefone.trim(),
       email: v.email.trim(),
       id_dentista: Number(v.id_dentista),
+      cep: cepLimpo || null,
+      logradouro: v.logradouro.trim() || null,
+      bairro: v.bairro.trim() || null,
+      cidade: v.cidade.trim() || null,
+      uf: v.uf.trim().toUpperCase() || null,
+      latitude: coords?.lat ?? null,
+      longitude: coords?.lng ?? null,
     };
     try {
       if (isEdit && initial) await atualizarPaciente(initial.id, payload);
@@ -289,6 +387,65 @@ function PacienteForm({
             ))}
           </select>
         </Field>
+
+        {/* ─── Endereço (opcional, usado pra ML e mapa) ─── */}
+        <div className="sm:col-span-2 pt-2 border-t border-gray-100">
+          <p className="text-xs font-semibold text-(--brand-secondary) mb-2 mt-2">
+            Endereço (opcional)
+          </p>
+        </div>
+        <Field label="CEP" error={cepErr ?? undefined}>
+          <div className="relative">
+            <input
+              {...register("cep")}
+              inputMode="numeric"
+              maxLength={9}
+              placeholder="00000-000"
+              onBlur={(e) => { void lookupCep(e.target.value); }}
+              className={inputCls}
+            />
+            {cepLoading && (
+              <Loader2 className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-(--brand-primary)" />
+            )}
+          </div>
+        </Field>
+        <Field label="UF">
+          <input {...register("uf")} maxLength={2} placeholder="SP" className={inputCls} />
+        </Field>
+        <Field label="Logradouro">
+          <input {...register("logradouro")} placeholder="Rua, Av., etc." className={inputCls} />
+        </Field>
+        <Field label="Bairro">
+          <input {...register("bairro")} className={inputCls} />
+        </Field>
+        <Field label="Cidade">
+          <input {...register("cidade")} className={inputCls} />
+        </Field>
+        <div className="flex items-end">
+          <button
+            type="button"
+            onClick={localizarNoMapa}
+            disabled={geoLoading}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-(--brand-primary) text-(--brand-primary) hover:bg-(--brand-tertiary) transition-colors disabled:opacity-50 w-full justify-center"
+          >
+            {geoLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <MapPin className="w-4 h-4" />
+            )}
+            Localizar no mapa
+          </button>
+        </div>
+        {coords && (
+          <p className="sm:col-span-2 text-xs text-green-700 bg-green-50 border border-green-200 rounded p-2">
+            Coordenadas: {coords.lat.toFixed(6)}, {coords.lng.toFixed(6)} &#10003;
+          </p>
+        )}
+        {geoErr && (
+          <p className="sm:col-span-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
+            {geoErr}
+          </p>
+        )}
 
         {submitErr && (
           <p className="sm:col-span-2 text-xs text-red-600 bg-red-50 border border-red-200 rounded p-2">
