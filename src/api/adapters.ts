@@ -20,6 +20,13 @@ export function toPaciente(d: PacienteDTO): Paciente {
     telefone: d.telefone,
     email: d.email,
     id_dentista: d.idDentista,
+    cep: d.cep ?? null,
+    logradouro: d.logradouro ?? null,
+    bairro: d.bairro ?? null,
+    cidade: d.cidade ?? null,
+    uf: d.uf ?? null,
+    latitude: d.latitude ?? null,
+    longitude: d.longitude ?? null,
   };
 }
 
@@ -31,6 +38,13 @@ export function buildPacienteRequest(p: Omit<Paciente, "id">): PacienteRequestDT
     telefone: p.telefone,
     email: p.email,
     idDentista: p.id_dentista,
+    cep: p.cep ?? null,
+    logradouro: p.logradouro ?? null,
+    bairro: p.bairro ?? null,
+    cidade: p.cidade ?? null,
+    uf: p.uf ?? null,
+    latitude: p.latitude ?? null,
+    longitude: p.longitude ?? null,
   };
 }
 
