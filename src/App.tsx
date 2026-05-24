@@ -11,6 +11,7 @@ import Faq from "./pages/Faq/Faq";
 import Who from "./pages/Who/Who";
 import Login from "./pages/Login/Login";
 import Colaborador from "./pages/Colaborador/Colaborador";
+import Area from "./pages/Colaborador/Area";
 import Dentista from "./pages/Dentista/Dentista";
 import NotFound from "./pages/NotFound/NotFound";
 
@@ -35,6 +36,14 @@ function App() {
               element={
                 <ProtectedRoute role="colaborador">
                   <Colaborador />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="colaborador/area/:bairro"
+              element={
+                <ProtectedRoute role="colaborador">
+                  <Area />
                 </ProtectedRoute>
               }
             />
