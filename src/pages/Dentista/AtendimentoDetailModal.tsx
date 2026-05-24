@@ -79,10 +79,10 @@ export function AtendimentoDetailModal({
   onClose,
   onSaved,
 }: Props) {
-  // ── Status / observações / data ─────────────────────────────────────────
+
   const [status, setStatus] = useState<StatusAtendimento>(atendimento.status);
   const [observacoes, setObservacoes] = useState(atendimento.observacoes);
-  // datetime-local quer "yyyy-MM-ddTHH:mm" (sem segundos). Truncamos pra 16 chars.
+
   const [dtAtendimento, setDtAtendimento] = useState(
     atendimento.dt_atendimento.slice(0, 16),
   );
@@ -150,7 +150,6 @@ export function AtendimentoDetailModal({
     }
   };
 
-  // ── Exames: lançar resultado / adicionar ────────────────────────────────
   const [resultados, setResultados] = useState<Record<number, string>>({});
   const [savingExame, setSavingExame] = useState<number | null>(null);
   const [exameError, setExameError] = useState<string | null>(null);
@@ -195,7 +194,6 @@ export function AtendimentoDetailModal({
     }
   };
 
-  // ── Anotações específicas do atendimento ────────────────────────────────
   const [anotacoes, setAnotacoes] = useState<Anotacao[]>([]);
   const [loadingAnot, setLoadingAnot] = useState(true);
   const [novaAnotacao, setNovaAnotacao] = useState("");
@@ -250,7 +248,7 @@ export function AtendimentoDetailModal({
         className="bg-white rounded-xl w-full max-w-lg shadow-xl max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cabeçalho */}
+        {}
         <div className="p-5 border-b border-gray-100 flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-(--brand-secondary) truncate">
@@ -277,7 +275,7 @@ export function AtendimentoDetailModal({
         </div>
 
         <div className="overflow-y-auto flex-1 p-5 space-y-6">
-          {/* Resumo do atendimento */}
+          {}
           <section className="space-y-2">
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <p className="text-sm text-(--text-color)">
@@ -298,7 +296,7 @@ export function AtendimentoDetailModal({
             </p>
           </section>
 
-          {/* Editar status / data / observações */}
+          {}
           <section className="space-y-3 border-t border-gray-100 pt-4">
             <h4 className="text-sm font-semibold text-(--brand-secondary)">
               Status, data e observações
@@ -369,7 +367,7 @@ export function AtendimentoDetailModal({
             </div>
           </section>
 
-          {/* Exames */}
+          {}
           <section className="space-y-3 border-t border-gray-100 pt-4">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-semibold text-(--brand-secondary)">
@@ -483,7 +481,7 @@ export function AtendimentoDetailModal({
             )}
           </section>
 
-          {/* Anotações específicas do atendimento */}
+          {}
           <section className="space-y-3 border-t border-gray-100 pt-4">
             <h4 className="text-sm font-semibold text-(--brand-secondary) flex items-center gap-2">
               <FileText className="w-4 h-4" /> Anotações deste atendimento

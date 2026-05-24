@@ -74,7 +74,7 @@ export function ColaboradoresGestao() {
       );
     })
     .sort((a, b) => {
-      // Cargo maior primeiro, depois alfabético por nome
+
       const cargoDiff = (NIVEL_CARGO[b.cargo] ?? 0) - (NIVEL_CARGO[a.cargo] ?? 0);
       return cargoDiff !== 0 ? cargoDiff : a.nome.localeCompare(b.nome);
     });

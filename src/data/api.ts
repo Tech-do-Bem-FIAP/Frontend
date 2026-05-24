@@ -76,8 +76,6 @@ export async function excluirDentista(id: number): Promise<void> {
   await api.deleteDentista(id);
 }
 
-// ─── Colaboradores ──────────────────────────────────────────────────────────
-
 export async function getTodosColaboradores(): Promise<Colaborador[]> {
   const list = await api.listColaboradores();
   return list.map(toColaborador);
@@ -104,8 +102,6 @@ export async function excluirColaborador(id: number): Promise<void> {
   await api.deleteColaborador(id);
 }
 
-// ─── Solicitações ───────────────────────────────────────────────────────────
-
 export async function getTodasSolicitacoes(): Promise<Solicitacao[]> {
   const list = await api.listSolicitacoes();
   return list.map(toSolicitacao);
@@ -118,7 +114,6 @@ export async function criarSolicitacao(args: {
   return toSolicitacao(dto);
 }
 
-/** Solicitação de cadastro vinda da tela de login (sem usuário logado). */
 export async function solicitarCadastroExterno(args: {
   nome: string; cpf: string; email: string; senha: string; telefone: string;
   descricao: string;
@@ -179,10 +174,6 @@ interface AtendimentoEdit {
   dt_atendimento: string;
 }
 
-/**
- * Atualiza status/observações/data de um atendimento existente.
- * Mantém paciente/dentista/campanha como estavam (não dá pra trocar pelo modal).
- */
 export async function atualizarAtendimento(
   original: AtendimentoApiOriginal,
   campos: AtendimentoEdit,
@@ -198,7 +189,6 @@ export async function atualizarAtendimento(
   });
 }
 
-/** Campos vindos do DTO necessários pra reconstruir um update. */
 export interface AtendimentoApiOriginal {
   id: number;
   tipo: string;
@@ -225,7 +215,6 @@ export async function adicionarExameAoAtendimento(
   await api.createExame({ tipo, requisitos, resultado: "", idAtendimento });
 }
 
-/** Throws Error("SEM_CAMPANHA") if no campanha exists. */
 export async function saveAtendimento(form: NovoAtendimento, dentistaId: number): Promise<void> {
   const campanhas: CampanhaDTO[] = await api.listCampanhas();
   if (campanhas.length === 0) throw new Error("SEM_CAMPANHA");
@@ -248,8 +237,6 @@ export async function saveAtendimento(form: NovoAtendimento, dentistaId: number)
   }
 }
 
-// ─── Campanhas ──────────────────────────────────────────────────────────────
-
 export async function getTodasCampanhas(): Promise<Campanha[]> {
   const list = await api.listCampanhas();
   return list.map(toCampanha);
@@ -269,8 +256,6 @@ export async function excluirCampanha(id: number): Promise<void> {
   await api.deleteCampanha(id);
 }
 
-// ─── Notificações ──────────────────────────────────────────────────────────
-
 async function listAll(): Promise<Notificacao[]> {
   const dtos = await api.listNotificacoes();
   return dtos
@@ -279,7 +264,6 @@ async function listAll(): Promise<Notificacao[]> {
     .sort((a, b) => b.data_envio.localeCompare(a.data_envio));
 }
 
-/** Notificações recebidas pelo dentista (vindas de colaborador). */
 export async function getNotificacoesRecebidasDentista(
   dentistaId: number,
 ): Promise<Notificacao[]> {
@@ -287,7 +271,6 @@ export async function getNotificacoesRecebidasDentista(
   return all.filter((n) => n.tipo === "col_to_den" && n.id_dentista === dentistaId);
 }
 
-/** Notificações enviadas por um colaborador (com status de leitura). */
 export async function getNotificacoesEnviadasColaborador(
   colaboradorId: number,
 ): Promise<Notificacao[]> {
@@ -297,7 +280,6 @@ export async function getNotificacoesEnviadasColaborador(
   );
 }
 
-/** Notificações enviadas por um dentista a pacientes. */
 export async function getNotificacoesEnviadasDentistaParaPacientes(
   dentistaId: number,
 ): Promise<Notificacao[]> {
@@ -322,8 +304,6 @@ export async function enviarDentistaParaPaciente(args: {
 export async function marcarNotificacaoLida(id: number): Promise<void> {
   await api.marcarNotificacaoLida(id);
 }
-
-// ─── Anotações ──────────────────────────────────────────────────────────────
 
 export async function getAnotacoesSobre(
   sobreTipo: AnotacaoSobreTipo,

@@ -1,9 +1,3 @@
-// Heatmap dos bairros classificados pelo modelo de ML.
-// Renderiza um CircleMarker por bairro, com cor por classe de demanda
-// (vermelho=Alta, amarelo=Media, verde=Baixa) e raio proporcional à
-// probabilidade da classe predita. Cada bairro tem Popup com link pra
-// /colaborador/area/:bairro.
-
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import { Link } from "react-router";
 import type { ClasseDemanda, RankingItem } from "../../api/ml";
@@ -20,7 +14,6 @@ interface Props {
   zoom?: number;
 }
 
-/** Raio mínimo 8px, máximo 22px, escalado pela probabilidade da classe predita. */
 function calcRaio(item: RankingItem): number {
   const p = item.probabilidades[item.classe] ?? 0;
   return 8 + Math.round(p * 14);

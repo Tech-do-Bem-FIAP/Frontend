@@ -54,7 +54,7 @@ function tipoLabel(tipo: string): string {
 export function SolicitacoesGestao({ cargo }: { cargo: CargoColaborador }) {
   const { user } = useAuth();
   const meuId = user!.id;
-  const podeRevisar = temNivel(cargo, 3); // Coord+
+  const podeRevisar = temNivel(cargo, 3);
 
   const [items, setItems] = useState<Solicitacao[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,7 +77,6 @@ export function SolicitacoesGestao({ cargo }: { cargo: CargoColaborador }) {
 
   useEffect(() => { void load(); }, [load]);
 
-  // Coord+ vê todas; outros só as próprias.
   const escopo = podeRevisar ? items : items.filter((s) => s.id_solicitante === meuId);
   const visiveis = filtroStatus === "todas" ? escopo : escopo.filter((s) => s.status === filtroStatus);
 

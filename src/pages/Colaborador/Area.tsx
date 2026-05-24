@@ -1,6 +1,3 @@
-// Página dinâmica /colaborador/area/:bairro — mostra predição ML + pacientes do bairro.
-// Fallback gracioso: se a API ML falhar, continua exibindo a lista de pacientes.
-
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { ArrowLeft, Loader2, Activity, AlertTriangle } from "lucide-react";
@@ -38,7 +35,7 @@ export default function Area() {
     setPredicaoErr(null);
     setPredicao(null);
     try {
-      // Pacientes do bairro (case-insensitive, mas igualdade exata após trim).
+
       const todos = await getTodosPacientes();
       const alvo = bairro.trim().toLowerCase();
       setPacientes(
@@ -50,7 +47,6 @@ export default function Area() {
       setLoading(false);
     }
 
-    // Predição ML — tolera falha sem travar a página.
     try {
       const p = await predizerDemanda({ bairro });
       setPredicao(p);
@@ -74,7 +70,7 @@ export default function Area() {
           <ArrowLeft className="w-4 h-4" /> Voltar ao painel
         </Link>
 
-        {/* ─── Hero do bairro ───────────────────────────────────────────── */}
+        {}
         <section className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
           <p className="text-xs uppercase tracking-wide text-(--text-secondary-color)">
             Área
@@ -91,7 +87,7 @@ export default function Area() {
           </div>
         </section>
 
-        {/* ─── Predição ML ─────────────────────────────────────────────── */}
+        {}
         <section className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm space-y-3">
           <h2 className="font-semibold text-(--brand-secondary)">
             Predição do modelo
@@ -151,7 +147,7 @@ export default function Area() {
           )}
         </section>
 
-        {/* ─── Pacientes do bairro ─────────────────────────────────────── */}
+        {}
         <section className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm space-y-3">
           <h2 className="font-semibold text-(--brand-secondary)">
             Pacientes nesta área
