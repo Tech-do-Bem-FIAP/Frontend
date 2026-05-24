@@ -13,7 +13,7 @@ export function DashboardHeader() {
   };
 
   const isAdmin = user?.cargo === "Administrador";
-  const isAdminEspecial = user?.email === "ADMIN";
+  const isAdminEspecial = user?.email === "admin@admin.com";
 
   return (
     <header className="bg-linear-to-b from-(--brand-secondary) to-(--brand-primary) text-white shadow-lg sticky top-0 z-10">

@@ -1,5 +1,5 @@
 // Tela administrativa de reconstrução do banco — restrita ao usuário ADMIN.
-// Único caminho de acesso é via login com email="ADMIN" / senha="ADMIN".
+// Único caminho de acesso é via login com email="admin@admin.com" / senha="admin".
 // O backend aplica a mesma validação; este gate é só para UX.
 
 import { useState } from "react";
@@ -29,7 +29,7 @@ export default function Sistema() {
   const [erro, setErro] = useState<string | null>(null);
 
   if (!user) return <Navigate to="/login" replace />;
-  if (user.email !== "ADMIN") return <Navigate to={`/${user.role}`} replace />;
+  if (user.email !== "admin@admin.com") return <Navigate to={`/${user.role}`} replace />;
 
   const podeExecutar =
     palavra === PALAVRA_CONFIRMACAO && senha.length > 0 && !executando;
