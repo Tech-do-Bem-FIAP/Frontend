@@ -114,7 +114,14 @@ function MapaTab() {
 
   useEffect(() => { void load(); }, [load]);
 
-  if (loading) return <LoadingBlock label="Carregando pacientes no mapa..." />;
+  if (loading) {
+    return (
+      <div className="space-y-3">
+        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-[500px] w-full" />
+      </div>
+    );
+  }
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   const semGeo = total - pacientes.length;
@@ -172,7 +179,15 @@ function AnaliseTab() {
 
   useEffect(() => { void load(); }, [load]);
 
-  if (loading) return <LoadingBlock label="Carregando análise de áreas..." />;
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-24 w-full" />
+        <Skeleton className="h-[500px] w-full" />
+        <Skeleton className="h-72 w-full" />
+      </div>
+    );
+  }
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   const contagem = itens.reduce(
