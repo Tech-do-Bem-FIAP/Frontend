@@ -1241,26 +1241,18 @@ export default function Colaborador() {
   };
 
   const tabsVisiveis = TABS.filter((t) => t.key !== "gestao" || podeGestao);
-  const gridClass =
-    tabsVisiveis.length === 7 ? "grid-cols-7"
-    : tabsVisiveis.length === 6 ? "grid-cols-6"
-    : tabsVisiveis.length === 5 ? "grid-cols-5"
-    : tabsVisiveis.length === 4 ? "grid-cols-4"
-    : "grid-cols-3";
 
   return (
     <div className="min-h-screen bg-(--brand-tertiary)">
       <DashboardHeader />
 
       <main className="max-w-2xl mx-auto px-4 py-6">
-        <div
-          className={`grid ${gridClass} bg-white rounded-xl overflow-hidden border border-gray-200 mb-6`}
-        >
+        <div className="flex flex-wrap bg-white rounded-xl overflow-hidden border border-gray-200 mb-6">
           {tabsVisiveis.map(({ key, label, Icon }) => (
             <button
               key={key}
               onClick={() => irParaAba(key)}
-              className={`flex items-center justify-center gap-1.5 py-3 text-sm font-medium transition-colors ${
+              className={`flex-1 min-w-[110px] flex items-center justify-center gap-1.5 py-3 text-sm font-medium transition-colors ${
                 tab === key
                   ? "bg-(--brand-primary) text-white"
                   : "text-(--text-color) hover:bg-(--brand-tertiary)"
