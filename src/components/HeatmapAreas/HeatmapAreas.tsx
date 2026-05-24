@@ -32,7 +32,7 @@ export function HeatmapAreas({
   zoom = 11,
 }: Props) {
   return (
-    <div className="w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+    <div className="isolate w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm">
       <MapContainer
         center={center}
         zoom={zoom}
