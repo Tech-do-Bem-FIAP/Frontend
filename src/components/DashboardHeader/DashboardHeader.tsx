@@ -1,5 +1,5 @@
-import { LogOut } from "lucide-react";
-import { useNavigate } from "react-router";
+import { LogOut, Database } from "lucide-react";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import logo from "../../assets/logo-tech-do-bem.webp";
 
@@ -13,6 +13,7 @@ export function DashboardHeader() {
   };
 
   const isAdmin = user?.cargo === "Administrador";
+  const isAdminEspecial = user?.email === "ADMIN";
 
   return (
     <header className="bg-linear-to-b from-(--brand-secondary) to-(--brand-primary) text-white shadow-lg sticky top-0 z-10">
@@ -38,13 +39,25 @@ export function DashboardHeader() {
           </div>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 bg-white/20 hover:bg-white/30 transition-colors rounded-full px-4 py-1.5 text-sm font-medium"
-        >
-          <LogOut className="w-4 h-4" />
-          Sair
-        </button>
+        <div className="flex items-center gap-2">
+          {isAdminEspecial && (
+            <Link
+              to="/admin/sistema"
+              className="flex items-center gap-2 bg-amber-300 hover:bg-amber-200 text-amber-900 transition-colors rounded-full px-4 py-1.5 text-sm font-medium"
+              title="Reconstruir banco de dados"
+            >
+              <Database className="w-4 h-4" />
+              Sistema
+            </Link>
+          )}
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 bg-white/20 hover:bg-white/30 transition-colors rounded-full px-4 py-1.5 text-sm font-medium"
+          >
+            <LogOut className="w-4 h-4" />
+            Sair
+          </button>
+        </div>
       </div>
     </header>
   );

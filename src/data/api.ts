@@ -18,7 +18,7 @@ export async function login(email: string, senha: string) {
     r.role === "colaborador" && r.cargo
       ? (r.cargo as import("../types").CargoColaborador)
       : null;
-  return { id: r.id, nome: r.nome, role: r.role as UserRole, cargo };
+  return { id: r.id, nome: r.nome, email: r.email, role: r.role as UserRole, cargo };
 }
 
 export async function getPacientesByDentista(dentistaId: number): Promise<Paciente[]> {

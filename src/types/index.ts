@@ -18,6 +18,7 @@ export function temNivel(cargo: CargoColaborador | null | undefined, minimo: num
 export interface AuthUser {
   id: number;
   nome: string;
+  email: string;
   role: UserRole;
   /** Só presente quando role === 'colaborador'. */
   cargo: CargoColaborador | null;
