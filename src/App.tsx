@@ -24,7 +24,7 @@ function App() {
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
-            {/* Public routes */}
+            {}
             <Route path="/" element={<Home />} />
             <Route path="about" element={<About />} />
             <Route path="contact" element={<Contact />} />
@@ -32,7 +32,7 @@ function App() {
             <Route path="who" element={<Who />} />
             <Route path="login" element={<Login />} />
 
-            {/* Protected dashboard routes */}
+            {}
             <Route
               path="colaborador"
               element={
@@ -74,7 +74,7 @@ function App() {
               }
             />
 
-            {/* 404 catch-all */}
+            {}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

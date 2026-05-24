@@ -38,8 +38,6 @@ import type {
 
 type Tab = "pacientes" | "atendimentos" | "notificacoes";
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("pt-BR");
 }
@@ -131,8 +129,6 @@ function errorMessage(err: unknown): string {
   }
   return "Erro inesperado.";
 }
-
-// ─── Shared UI ──────────────────────────────────────────────────────────────
 
 function PacientesSkeleton() {
   return (
@@ -227,15 +223,11 @@ function ErrorBlock({ message, onRetry }: { message: string; onRetry: () => void
   );
 }
 
-// ─── Tabs nav ────────────────────────────────────────────────────────────────
-
 const TABS: { key: Tab; label: string; Icon: React.ElementType }[] = [
   { key: "pacientes", label: "Pacientes", Icon: Users },
   { key: "atendimentos", label: "Atendimentos", Icon: CalendarDays },
   { key: "notificacoes", label: "Notificações", Icon: Bell },
 ];
-
-// ─── Pacientes tab ──────────────────────────────────────────────────────────
 
 type NotesModal = { paciente: Paciente } | null;
 
@@ -452,8 +444,6 @@ function PacientesTab({
     </>
   );
 }
-
-// ─── Atendimentos tab ────────────────────────────────────────────────────────
 
 type AtendimentoForm = {
   id_paciente: string;
@@ -854,8 +844,6 @@ function AtendimentosTab({
   );
 }
 
-// ─── Notificações tab ────────────────────────────────────────────────────────
-
 type SendNotifForm = { id_paciente: string; mensagem: string };
 
 interface NotificacoesTabProps {
@@ -923,7 +911,6 @@ function NotificacoesTab({
   const getPacienteNome = (id: number | null) =>
     id == null ? "—" : pacientes.find((p) => p.id === id)?.nome ?? `#${id}`;
 
-  // Filtro de paciente nas enviadas. "todos" preserva o agrupamento.
   const [filtroEnviadas, setFiltroEnviadas] = useState<number | "todos">("todos");
 
   const enviadasFiltradas =
@@ -931,7 +918,6 @@ function NotificacoesTab({
       ? enviadas
       : enviadas.filter((n) => n.id_paciente === filtroEnviadas);
 
-  // Agrupa enviadas (já filtradas) por paciente, preservando ordem cronológica.
   const enviadasPorPaciente = (() => {
     const grupos = new Map<number, Notificacao[]>();
     for (const n of enviadasFiltradas) {
@@ -947,7 +933,6 @@ function NotificacoesTab({
     }));
   })();
 
-  // Pacientes que JÁ receberam alguma notificação — só faz sentido filtrar por esses.
   const pacientesComEnviadas = (() => {
     const ids = new Set<number>();
     for (const n of enviadas) if (n.id_paciente != null) ids.add(n.id_paciente);
@@ -1053,7 +1038,7 @@ function NotificacoesTab({
       </div>
 
       <div className="space-y-4">
-        {/* Não lidas */}
+        {}
         {naoLidas.length > 0 && (
           <div>
             <h3 className="font-semibold text-(--text-color) mb-3 flex items-center gap-2">
@@ -1075,7 +1060,7 @@ function NotificacoesTab({
           </div>
         )}
 
-        {/* Lidas */}
+        {}
         {lidas.length > 0 && (
           <div>
             <h3 className="text-sm font-medium text-(--text-secondary-color) mb-2">
@@ -1207,14 +1192,11 @@ function NotifRecebidaCard({
   );
 }
 
-// ─── Page ────────────────────────────────────────────────────────────────────
-
 export default function Dentista() {
   const { user } = useAuth();
   const dentistaId = user!.id;
   const [tab, setTab] = useState<Tab>("pacientes");
 
-  // Pré-seleção de paciente quando o dentista usa um atalho do card.
   const [preAtendimento, setPreAtendimento] = useState<Paciente | null>(null);
   const [preNotificacao, setPreNotificacao] = useState<Paciente | null>(null);
 
@@ -1231,13 +1213,12 @@ export default function Dentista() {
   const consumePreAtendimento = useCallback(() => setPreAtendimento(null), []);
   const consumePreNotificacao = useCallback(() => setPreNotificacao(null), []);
 
-  // Recebidas vivem na Page pra alimentar o badge da tab Notificações.
   const [recebidas, setRecebidas] = useState<Notificacao[]>([]);
   const refreshRecebidas = useCallback(async () => {
     try {
       setRecebidas(await getNotificacoesRecebidasDentista(dentistaId));
     } catch {
-      /* silencioso — a tab Notificações exibe o erro quando aberta */
+
     }
   }, [dentistaId]);
   useEffect(() => {

@@ -127,7 +127,6 @@ function toExame(e: ExameDTO): Exame {
   return { id: e.idExame, tipo: e.tipo, requisitos: e.requisitos, resultado: e.resultado };
 }
 
-/** Backend grava status em lowercase ('agendado'/'realizado'/'cancelado'). */
 function normalizeStatus(s: string): Atendimento["status"] {
   const lower = (s ?? "").toLowerCase();
   if (lower === "agendado") return "Agendado";
@@ -151,7 +150,6 @@ export function toAtendimento(a: AtendimentoDTO, exames: ExameDTO[]): Atendiment
   };
 }
 
-/** Infere a direção da notificação pelas FKs preenchidas. */
 function inferTipo(dto: NotificacaoDTO): NotificacaoTipo | null {
   const hasDen = dto.idDentista != null;
   const hasCol = dto.idColaborador != null;
@@ -163,7 +161,7 @@ function inferTipo(dto: NotificacaoDTO): NotificacaoTipo | null {
 
 export function toNotificacao(n: NotificacaoDTO): Notificacao | null {
   const tipo = inferTipo(n);
-  if (!tipo) return null; // ignora registros com direção indefinida
+  if (!tipo) return null;
   return {
     id: n.idNotificacao,
     mensagem: n.mensagem,

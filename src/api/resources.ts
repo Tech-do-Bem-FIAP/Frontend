@@ -1,13 +1,11 @@
 import { http } from "./client";
 
-// ─── Backend DTO shapes (verbatim field names) ───────────────────────────────
-
 export interface LoginResponseDTO { role: string; id: number; nome: string; email: string; cargo: string | null }
 
 export interface PacienteDTO {
   idPaciente: number; nome: string; cpf: string | null;
   dataNasc: string; telefone: string; email: string; idDentista: number;
-  /** Campos de endereço/geolocalização — opcionais (backend pode retornar null). */
+
   cep?: string | null;
   logradouro?: string | null;
   bairro?: string | null;
@@ -20,7 +18,7 @@ export interface PacienteDTO {
 export interface PacienteRequestDTO {
   nome: string; cpf: string | null;
   dataNasc: string; telefone: string; email: string; idDentista: number;
-  /** Campos opcionais de endereço/geolocalização — enviar apenas quando preenchidos. */
+
   cep?: string | null;
   logradouro?: string | null;
   bairro?: string | null;
@@ -38,7 +36,7 @@ export interface DentistaDTO {
 
 export interface DentistaRequestDTO {
   nome: string; cpf: string; email: string;
-  /** Vazio/null = preserva senha atual no update; obrigatório no POST. */
+
   senha: string | null;
   cro: string; especialidade: string; disponibilidade: number;
   idColaborador: number | null;
@@ -51,7 +49,7 @@ export interface ColaboradorDTO {
 
 export interface ColaboradorRequestDTO {
   nome: string; cpf: string; email: string;
-  /** Vazio/null = preserva senha atual no update; obrigatório no POST. */
+
   senha: string | null;
   cargo: string; disponibilidade: number;
 }
@@ -102,8 +100,6 @@ export interface NotificacaoRequestDTO {
   statusEnvio?: string | null;
   canal?: string | null;
 }
-
-// ─── Endpoint calls ──────────────────────────────────────────────────────────
 
 export const api = {
   login: (email: string, senha: string) =>
@@ -182,7 +178,7 @@ export type StatusSolicitacao = "pendente" | "aprovada" | "rejeitada";
 
 export interface SolicitacaoDTO {
   idSolicitacao: number;
-  /** Null quando vem de fora (pedido de cadastro pela tela de login). */
+
   idSolicitante: number | null;
   nomeSolicitante: string | null;
   tipo: string; descricao: string; status: StatusSolicitacao;
@@ -194,12 +190,12 @@ export interface SolicitacaoDTO {
   emailExterno: string | null;
   senhaExterno: string | null;
   telefoneExterno: string | null;
-  /** Quando uma solicitação externa é aprovada, o id do colaborador recém-criado. */
+
   idColaboradorCriado: number | null;
 }
 
 export interface SolicitacaoRequestDTO {
-  /** Null se for pedido externo (cadastro). */
+
   idSolicitante: number | null;
   tipo: string;
   descricao: string;
@@ -213,7 +209,7 @@ export interface SolicitacaoRequestDTO {
 export interface SolicitacaoReviewRequestDTO {
   status: "aprovada" | "rejeitada"; idRevisor: number;
   comentario: string | null;
-  /** Obrigatório ao aprovar uma solicitação externa (define o cargo do novo colaborador). */
+
   cargo: string | null;
 }
 

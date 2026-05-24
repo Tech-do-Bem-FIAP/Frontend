@@ -19,7 +19,7 @@ interface FormValues {
   data_nasc: string;
   telefone: string;
   email: string;
-  id_dentista: string; // <select> sempre devolve string
+  id_dentista: string;
   cep: string;
   logradouro: string;
   bairro: string;
@@ -255,7 +255,6 @@ function PacienteForm({
 
   const cep = watch("cep");
 
-  /** Dispara ViaCEP quando o CEP fica completo (8 dígitos). */
   const lookupCep = useCallback(async (raw: string) => {
     const limpo = raw.replace(/\D/g, "");
     if (limpo.length !== 8) return;
@@ -267,19 +266,18 @@ function PacienteForm({
         setCepErr("CEP não encontrado.");
         return;
       }
-      // Preserva valores manuais já digitados quando ViaCEP devolve campos vazios.
+
       if (endereco.logradouro) setValue("logradouro", endereco.logradouro, { shouldDirty: true });
       if (endereco.bairro) setValue("bairro", endereco.bairro, { shouldDirty: true });
       if (endereco.cidade) setValue("cidade", endereco.cidade, { shouldDirty: true });
       if (endereco.uf) setValue("uf", endereco.uf, { shouldDirty: true });
-      // Coords ficam stale se o usuário trocar de CEP — força nova busca manual.
+
       setCoords(null);
     } finally {
       setCepLoading(false);
     }
   }, [setValue]);
 
-  // Debounce de 400ms no onChange do CEP — backup caso o user não saia do campo.
   useEffect(() => {
     if (cepDebounce.current != null) {
       window.clearTimeout(cepDebounce.current);
@@ -400,7 +398,7 @@ function PacienteForm({
           </select>
         </Field>
 
-        {/* ─── Endereço (opcional, usado pra ML e mapa) ─── */}
+        {}
         <div className="sm:col-span-2 pt-2 border-t border-gray-100">
           <p className="text-xs font-semibold text-(--brand-secondary) mb-2 mt-2">
             Endereço (opcional)

@@ -2,12 +2,6 @@
 @import "./theme.css";
 @import "./variable.css";
 
-/* * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-} */
-
 body {
   font-family: var(--text-font-style);
 }
@@ -26,18 +20,9 @@ h6 {
   font-family: var(--title-font-style);
 }
 
-/* p {
-  color: var(--text-color);
-} */
-
 body {
   background-color: var(--bg-color);
 }
-
-/* a {
-  text-decoration: none;
-  color: var(--brand-primary);
-} */
 
 @keyframes fade-in-up {
   from {
@@ -51,7 +36,7 @@ body {
 }
 
 .animate-fade-in {
-  animation: fade-in-up 0.28s ease-out both;
+  animation: fade-in-up 0.28s ease-out backwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
