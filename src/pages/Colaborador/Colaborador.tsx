@@ -8,7 +8,6 @@ import {
   Plus,
   ChevronDown,
   ChevronUp,
-  Loader2,
   Settings,
   UserCircle,
   Megaphone,
@@ -22,7 +21,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { DashboardHeader } from "../../components/DashboardHeader/DashboardHeader";
-import { Skeleton } from "../../components/Skeleton/Skeleton";
+import { Skeleton, SkeletonText } from "../../components/Skeleton/Skeleton";
 import { useAuth } from "../../contexts/AuthContext";
 import {
   getDentistasByColaborador,
@@ -62,15 +61,6 @@ function errorMessage(err: unknown): string {
     return err.status === 0 ? "Não foi possível conectar à API." : err.message;
   }
   return "Erro inesperado.";
-}
-
-function LoadingBlock({ label = "Carregando..." }: { label?: string }) {
-  return (
-    <div className="flex items-center justify-center py-10 gap-2 text-(--text-secondary-color)">
-      <Loader2 className="w-4 h-4 animate-spin" />
-      <span className="text-sm">{label}</span>
-    </div>
-  );
 }
 
 function ErrorBlock({ message, onRetry }: { message: string; onRetry: () => void }) {
@@ -696,7 +686,7 @@ function NotificacoesTab({
     }
   };
 
-  if (loading) return <LoadingBlock label="Carregando notificações..." />;
+  if (loading) return <NotificacoesSkeleton readOnly={readOnly} />;
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   return (
@@ -847,6 +837,40 @@ function NotificacoesTab({
   );
 }
 
+function NotificacoesSkeleton({ readOnly }: { readOnly: boolean }) {
+  return (
+    <div className="space-y-6">
+      {!readOnly && (
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-5 space-y-3">
+          <Skeleton className="h-4 w-40" />
+          <Skeleton className="h-9 w-full" />
+          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-9 w-28" />
+        </div>
+      )}
+      <div>
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-7 w-40" />
+        </div>
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="space-y-2">
+              <Skeleton className="h-3 w-32" />
+              <div className="space-y-2 border-l-2 border-(--brand-tertiary) pl-3">
+                <div className="bg-white border border-gray-200 rounded-xl p-3 space-y-2">
+                  <SkeletonText lines={2} />
+                  <Skeleton className="h-2.5 w-28" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function DentistaGrupo({
   nome,
   notifs,
@@ -892,6 +916,32 @@ function DentistaGrupo({
 }
 
 // ─── Anotações tab ──────────────────────────────────────────────────────────
+
+function AnotacoesSkeleton({ readOnly }: { readOnly: boolean }) {
+  return (
+    <div className="space-y-5">
+      <div className="space-y-1">
+        <Skeleton className="h-3 w-20" />
+        <Skeleton className="h-9 w-full" />
+      </div>
+      {!readOnly && (
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-5 space-y-3">
+          <Skeleton className="h-4 w-36" />
+          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-9 w-24" />
+        </div>
+      )}
+      <div className="space-y-2">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="bg-white border border-gray-200 rounded-xl p-4 space-y-2">
+            <SkeletonText lines={2} />
+            <Skeleton className="h-2.5 w-24" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 type AddNoteForm = { texto: string };
 
@@ -970,7 +1020,7 @@ function AnotacoesTab({
     }
   };
 
-  if (loading) return <LoadingBlock label="Carregando anotações..." />;
+  if (loading) return <AnotacoesSkeleton readOnly={readOnly} />;
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   return (
