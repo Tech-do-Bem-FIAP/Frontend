@@ -314,7 +314,7 @@ function PacientesTab({
 
   return (
     <>
-      <div className="space-y-3">
+      <div className="space-y-3 animate-fade-in">
         <h2 className="font-semibold text-(--text-color)">Meus Pacientes</h2>
 
         {pacientes.length === 0 && (
@@ -584,7 +584,7 @@ function AtendimentosTab({
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fade-in">
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-(--text-color)">Atendimentos</h2>
         <button
@@ -985,7 +985,7 @@ function NotificacoesTab({
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-5">
         <h3 className="font-semibold text-(--brand-secondary) mb-4 flex items-center gap-2">
           <Plus className="w-4 h-4" /> Enviar Notificação a Paciente

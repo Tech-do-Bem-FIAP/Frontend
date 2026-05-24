@@ -365,7 +365,7 @@ function DentistasTab({
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 animate-fade-in">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <h2 className="font-semibold text-(--text-color)">
           {visaoGlobal ? "Todos os Dentistas" : "Dentistas Vinculados"}
@@ -690,7 +690,7 @@ function NotificacoesTab({
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {!readOnly && (
         <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-5">
           <h3 className="font-semibold text-(--brand-secondary) mb-4 flex items-center gap-2">
@@ -1024,7 +1024,7 @@ function AnotacoesTab({
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 animate-fade-in">
       <div>
         <label className="block text-sm font-medium text-(--text-color) mb-1">
           Dentista

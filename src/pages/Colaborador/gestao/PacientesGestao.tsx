@@ -162,7 +162,7 @@ export function PacientesGestao() {
         return (
           <div
             key={p.id}
-            className="bg-white border border-gray-200 border-l-4 border-l-(--brand-primary) rounded-xl p-4 flex items-start justify-between gap-3"
+            className="bg-white border border-gray-200 border-l-4 border-l-(--brand-primary) rounded-xl p-4 flex items-start justify-between gap-3 animate-fade-in"
           >
             <div className="min-w-0 flex-1">
               <p className="font-semibold text-(--brand-secondary) truncate">
