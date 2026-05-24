@@ -1,3 +1,4 @@
+import { Users2 } from "lucide-react";
 import { Footer } from "../../components/Footer/Footer";
 import { Header } from "../../components/Header/Header";
 import hugo from "../../assets/fotoHugo.png";
@@ -12,11 +13,16 @@ function Who() {
 
       <main className="bg-(--brand-tertiary) min-h-screen">
         <section className="container_page py-16">
-          <h1 className="title3 font-bold mb-2">Quem somos</h1>
-          <p className="text-(--text-color) mb-10">
+          <p className="text-xs font-medium uppercase tracking-wider text-(--brand-primary) mb-2 inline-flex items-center gap-2">
+            <Users2 className="w-3.5 h-3.5" />
+            A equipe
+          </p>
+          <h1 className="title font-bold mb-6">Quem somos</h1>
+          <p className="text-lg text-(--text-color) leading-relaxed max-w-3xl mb-12">
             A Tech do Bem foi desenvolvida por três estudantes de Análise e
-            Desenvolvimento de Sistemas da FIAP, unidos pelo propósito de
-            transformar vidas através da tecnologia.
+            Desenvolvimento de Sistemas da{" "}
+            <span className="font-semibold text-(--brand-secondary)">FIAP</span>
+            , unidos pelo propósito de transformar vidas através da tecnologia.
           </p>
 
           <Biography
