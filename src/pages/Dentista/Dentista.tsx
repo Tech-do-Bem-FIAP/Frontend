@@ -7,12 +7,12 @@ import {
   Plus,
   CheckCheck,
   AlertCircle,
-  Loader2,
   FileText,
   Send,
   CalendarPlus,
 } from "lucide-react";
 import { DashboardHeader } from "../../components/DashboardHeader/DashboardHeader";
+import { Skeleton, SkeletonText } from "../../components/Skeleton/Skeleton";
 import { AtendimentoDetailModal } from "./AtendimentoDetailModal";
 import { useAuth } from "../../contexts/AuthContext";
 import {
@@ -134,11 +134,81 @@ function errorMessage(err: unknown): string {
 
 // ─── Shared UI ──────────────────────────────────────────────────────────────
 
-function LoadingBlock({ label = "Carregando..." }: { label?: string }) {
+function PacientesSkeleton() {
   return (
-    <div className="flex items-center justify-center py-10 gap-2 text-(--text-secondary-color)">
-      <Loader2 className="w-4 h-4 animate-spin" />
-      <span className="text-sm">{label}</span>
+    <div className="space-y-3">
+      <Skeleton className="h-5 w-40" />
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div
+          key={i}
+          className="bg-white border border-gray-200 border-l-4 border-l-(--brand-primary) rounded-xl shadow-sm p-4 min-h-40 flex items-stretch justify-between gap-3"
+        >
+          <div className="flex-1 flex flex-col justify-center space-y-2">
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-3 w-1/3" />
+            <Skeleton className="h-3 w-2/3" />
+            <Skeleton className="h-3 w-2/3" />
+          </div>
+          <div className="flex flex-col justify-evenly shrink-0 gap-2">
+            <Skeleton className="w-6 h-6" rounded="full" />
+            <Skeleton className="w-6 h-6" rounded="full" />
+            <Skeleton className="w-6 h-6" rounded="full" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function AtendimentosSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-5 w-40" />
+        <Skeleton className="h-9 w-28" />
+      </div>
+      <div className="flex gap-2">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-7 w-20" rounded="full" />
+        ))}
+      </div>
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div
+          key={i}
+          className="bg-white border border-gray-200 border-l-4 border-l-(--brand-primary) rounded-xl shadow-sm p-4 space-y-2"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-3 w-2/3" />
+            </div>
+            <Skeleton className="h-5 w-20" rounded="full" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DentistaNotificacoesSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-5 space-y-3">
+        <Skeleton className="h-4 w-56" />
+        <Skeleton className="h-3 w-20" />
+        <Skeleton className="h-9 w-full" />
+        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-9 w-28" />
+      </div>
+      <div className="space-y-3">
+        <Skeleton className="h-4 w-32" />
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="bg-white border border-gray-200 rounded-xl p-3 space-y-2">
+            <SkeletonText lines={2} />
+            <Skeleton className="h-2.5 w-28" />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -239,7 +309,7 @@ function PacientesTab({
     }
   };
 
-  if (loading) return <LoadingBlock label="Carregando pacientes..." />;
+  if (loading) return <PacientesSkeleton />;
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   return (
@@ -510,7 +580,7 @@ function AtendimentosTab({
     Cancelado: "bg-gray-100 text-gray-500",
   };
 
-  if (loading) return <LoadingBlock label="Carregando atendimentos..." />;
+  if (loading) return <AtendimentosSkeleton />;
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   return (
@@ -911,7 +981,7 @@ function NotificacoesTab({
     }
   };
 
-  if (loading) return <LoadingBlock label="Carregando notificações..." />;
+  if (loading) return <DentistaNotificacoesSkeleton />;
   if (error) return <ErrorBlock message={error} onRetry={load} />;
 
   return (
