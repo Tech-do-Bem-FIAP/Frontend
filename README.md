@@ -18,6 +18,7 @@
 
 [![Frontend Repo](https://img.shields.io/badge/🔗%20Frontend-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/Tech-do-Bem-FIAP/Frontend)
 [![Backend Repo](https://img.shields.io/badge/🔗%20Backend-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/Tech-do-Bem-FIAP/Backend_Java)
+[![YouTube Demo](https://img.shields.io/badge/▶%20Video-YouTube-FF0000?style=for-the-badge&logo=youtube)](https://youtu.be/Lg2bjzDWGgQ)
 
 </div>
 
@@ -156,7 +157,28 @@ frontend/
 
 ## 🚀 Como Rodar
 
+### Deploy na Vercel
+
+O projeto está online via deploy na Vercel. O link de acesso está em  [`Tech do Bem`](https://techdobem.vercel.app)
+
+### Login de teste
+
+Para teste possuímos alguns logins de acordo com cada role: 
+
+Administrador -                      admin@admin.com                    / admin
+
+Coordenador -                        bruno.melo@techbem.com             / bru456
+
+Auxiliar -                           carla.souza@techbem.com            / car789
+
+Auxiliar promovido a estagiário -    diego.rocha.atualizado@techbem.com / die012
+
+Dentista -                           paulo.alves@techbem.com            / pau111
+
+
 ### Pré-requisitos
+
+Caso queira rodar localmente siga o passo a passo a seguir:
 
 - [Node.js](https://nodejs.org/) 20+ e npm
 - [JDK 17](https://adoptium.net/)
@@ -196,9 +218,6 @@ npm run dev       # http://localhost:5173
 | `npm run preview`  | Pré-visualiza o build                  |
 | `npm run lint`     | Roda o ESLint                          |
 
-### Login de teste
-
-Após popular o banco com o script de seed, é possível logar com qualquer colaborador ou dentista cadastrado. As senhas dos usuários de seed são `123` (apenas para fins acadêmicos — não há hash em produção).
 
 ---
 
